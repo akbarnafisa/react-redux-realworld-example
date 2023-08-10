@@ -1,5 +1,5 @@
 import React, {
-  // lazy,
+  lazy,
   Suspense,
   // useEffect,
   memo
@@ -11,11 +11,11 @@ import Home from '../components/Home';
 // import { appLoad, clearRedirect } from '../reducers/common';
 import Header from './Header';
 
-// const Article = lazy(() =>
-//   import(
-//     /* webpackChunkName: "Article", webpackPrefetch: true  */ '../components/Article'
-//   )
-// );
+const Article = lazy(() =>
+  import(
+    /* webpackChunkName: "Article", webpackPrefetch: true  */ '../components/Article'
+  )
+);
 // const Editor = lazy(() =>
 //   import(
 //     /* webpackChunkName: "Editor", webpackPrefetch: true  */ '../components/Editor'
@@ -62,11 +62,12 @@ function App() {
         <Suspense fallback={<p>Loading...</p>}>
           <Routes>
             <Route exact path="/" element={<Home />} />
+            <Route path="/article/:slug" element={<Article />} />
             {/* <Route path="/login" element={<AuthScreen />} />
             <Route path="/register" element={<AuthScreen isRegisterScreen />} />
             <Route path="/editor/:slug" element={<Editor />} />
             <Route path="/editor" element={<Editor />} />
-            <Route path="/article/:slug" element={<Article />} />
+            
             <Route path="/settings" element={<SettingsScreen />} />
             <Route
               path="/@:username/favorites"
