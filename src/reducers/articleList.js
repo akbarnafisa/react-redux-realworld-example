@@ -1,12 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import agent from '../agent';
+import { profilePageUnloaded } from './profile';
 // import { profilePageUnloaded } from './profile';
 
 export const changeTab = (tab) => (dispatch) => {
   dispatch(articleListSlice.actions.changeTab(tab));
   return dispatch(getAllArticles());
 };
+
+export const getArticlesByAuthor = createAsyncThunk(
+  'articleList/getArticlesByAuthor',
+  ({ author, page } = {}) => agent.Articles.byAuthor(author, page)
+);
+
+export const getFavoriteArticles = createAsyncThunk(
+  'articleList/getFavoriteArticles',
+  ({ username, page } = {}) => agent.Articles.favoritedBy(username, page)
+);
 
 export const getAllArticles = createAsyncThunk(
   'articleList/getAll',
@@ -99,6 +110,27 @@ const articleListSlice = createSlice({
       tag: action.meta.arg?.tag,
       articlesPerPage: 10,
     }));
+
+    builder.addCase(getArticlesByAuthor.fulfilled, (_, action) => ({
+      articles: action.payload.articles,
+      articlesCount: action.payload.articlesCount,
+      currentPage: action.meta.arg?.page ?? 0,
+      author: action.meta.arg?.author,
+      articlesPerPage: 5,
+    }));
+
+    builder.addCase(getFavoriteArticles.fulfilled, (_, action) => ({
+      articles: action.payload.articles,
+      articlesCount: action.payload.articlesCount,
+      currentPage: action.meta.arg?.page ?? 0,
+      favorited: action.meta.arg?.username,
+      articlesPerPage: 5,
+    }));
+
+    builder.addMatcher(
+      (action) => [profilePageUnloaded.type].includes(action.type),
+      () => initialState
+    );
   },
 });
 

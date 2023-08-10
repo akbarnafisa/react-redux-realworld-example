@@ -10,7 +10,7 @@ import tagsReducer from '../features/tags/tagsSlice';
 import articleReducer from '../reducers/article';
 import articlesReducer from '../reducers/articleList';
 import commonReducer from '../reducers/common';
-// import profileReducer from '../reducers/profile';
+import profileReducer from '../reducers/profile';
 
 export function makeStore(preloadedState) {
   return configureStore({
@@ -19,9 +19,9 @@ export function makeStore(preloadedState) {
       tags: tagsReducer,
       common: commonReducer,
       article: articleReducer,
+      profile: profileReducer,
       //   auth: authReducer,
       //   comments: commentsReducer,
-      //   profile: profileReducer,
     },
     devTools: true,
     preloadedState,
