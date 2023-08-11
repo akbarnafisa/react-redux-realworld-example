@@ -1,9 +1,10 @@
 import { memo, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { changeTab, homePageUnloaded } from '../../reducers/articleList';
 import MainView from './MainView';
 import TagsSidebar from "../../features/tags/TagsSidebar";
+import { selectIsAuthenticated } from "../../features/auth/authSlice";
 
 /**
  * Home screen component
@@ -14,11 +15,10 @@ import TagsSidebar from "../../features/tags/TagsSidebar";
 
 function Home() {
   const dispatch = useDispatch()
-  // const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   useEffect(() => {
-    // const defaultTab = isAuthenticated ? 'feed' : 'all';
-    const defaultTab = 'all'
+    const defaultTab = isAuthenticated ? 'feed' : 'all';
     const fetchArticles = dispatch(changeTab(defaultTab))
 
     return () => {
