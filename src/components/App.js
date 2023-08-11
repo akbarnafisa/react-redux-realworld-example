@@ -21,11 +21,11 @@ const Article = lazy(() =>
 //     /* webpackChunkName: "Editor", webpackPrefetch: true  */ '../components/Editor'
 //   )
 // );
-// const AuthScreen = lazy(() =>
-//   import(
-//     /* webpackChunkName: "AuthScreen", webpackPrefetch: true  */ '../features/auth/AuthScreen'
-//   )
-// );
+const AuthScreen = lazy(() =>
+  import(
+    /* webpackChunkName: "AuthScreen", webpackPrefetch: true  */ '../features/auth/AuthScreen'
+  )
+);
 const Profile = lazy(() =>
   import(
     /* webpackChunkName: "Profile", webpackPrefetch: true  */ '../components/Profile'
@@ -68,11 +68,12 @@ function App() {
               path="/profile/:username/favorites"
               element={<Profile isFavoritePage />}
             />
-            {/* <Route path="/login" element={<AuthScreen />} />
             <Route path="/register" element={<AuthScreen isRegisterScreen />} />
+            <Route path="/login" element={<AuthScreen />} />
+            {/* 
+            
             <Route path="/editor/:slug" element={<Editor />} />
             <Route path="/editor" element={<Editor />} />
-            
             <Route path="/settings" element={<SettingsScreen />} />
             
              */}
