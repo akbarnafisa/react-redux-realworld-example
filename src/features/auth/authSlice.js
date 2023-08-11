@@ -97,7 +97,9 @@ export const login = createAsyncThunk(
 export const getUser = createAsyncThunk(
   'auth/getUser',
   async () => {
-    const user = await agent.Auth.current()
+    const {
+      user: { token, ...user },
+    } =  await agent.Auth.current()
     return { token, user}
   },
   {
@@ -146,6 +148,7 @@ const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, successReducer)
       .addCase(register.fulfilled, successReducer)
+      .addCase(getUser.fulfilled, successReducer)
 
     builder
       .addCase(login.rejected, failureReducer)
@@ -157,6 +160,33 @@ const authSlice = createSlice({
     );
   },
 });
+
+/**
+ * Get current user
+ *
+ * @param {object} state
+ * @returns {User}
+ */
+export const selectUser = (state) => selectAuthSlice(state).user;
+
+/**
+ * Get is authenticated
+ *
+ * @param {object} state
+ * @returns {boolean}
+ */
+export const selectIsAuthenticated = createSelector(
+  (state) => selectAuthSlice(state).token,
+  selectUser,
+  (token, user) => {
+    console.log({
+      token,
+      user
+    })
+    return Boolean(token && user)
+  }
+);
+
 
 export const { setToken, logout } = authSlice.actions;
 

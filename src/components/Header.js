@@ -1,5 +1,7 @@
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { selectIsAuthenticated, selectUser } from '../features/auth/authSlice';
 
 
 /**
@@ -33,12 +35,63 @@ function LoggedOutNavbar() {
 }
 
 /**
+ * Navbar when there is a logged user
+ *
+ * @example
+ * <LoggedInNavbar />
+ */
+function LoggedInNavbar() {
+  const currentUser = useSelector(selectUser)
+
+  return (
+    <ul className="nav navbar-nav pull-xs-right">
+      <li className="nav-item">
+        <Link to="/" className="nav-link">
+          Home
+        </Link>
+      </li>
+
+      <li className="nav-item">
+        <Link to="/editor" className="nav-link">
+          <i className="ion-compose" />
+          &nbsp;New Post
+        </Link>
+      </li>
+
+      <li className="nav-item">
+        <Link to="/settings" className="nav-link">
+          <i className="ion-gear-a" />
+          &nbsp;Settings
+        </Link>
+      </li>
+
+      <li className="nav-item">
+        <Link to={`/profile/${currentUser?.username}`} className="nav-link">
+          <img
+            src={
+              currentUser?.image ||
+              'https://static.productionready.io/images/smiley-cyrus.jpg'
+            }
+            className="user-pic"
+            alt={currentUser?.username}
+          />
+          {currentUser?.username}
+        </Link>
+      </li>
+    </ul>
+  );
+
+}
+
+/**
  * App header
  *
  * @example
  * <Header />
  */
 function Header () {
+  const isAuthenticated = useSelector(selectIsAuthenticated)
+
   return (
     <nav className="navbar navbar-light">
       <div className="container">
@@ -46,7 +99,7 @@ function Header () {
           Conduit
         </Link>
 
-        <LoggedOutNavbar />
+        { isAuthenticated ? <LoggedInNavbar /> : <LoggedOutNavbar />}
       </div>
     </nav>
   )
