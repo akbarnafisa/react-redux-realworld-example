@@ -1,14 +1,14 @@
 import React, {
   lazy,
   Suspense,
-  // useEffect,
+  useEffect,
   memo
 } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 
 import Home from '../components/Home';
-// import { appLoad, clearRedirect } from '../reducers/common';
+import { appLoad } from '../reducers/common';
 import Header from './Header';
 
 const Article = lazy(() =>
@@ -38,24 +38,16 @@ const Profile = lazy(() =>
 // );
 
 function App() {
-  // const dispatch = useDispatch();
-  // const redirectTo = useSelector((state) => state.common.redirectTo);
-  // const appLoaded = useSelector((state) => state.common.appLoaded);
+  const dispatch = useDispatch();
+  const appLoaded = useSelector((state) => state.common.appLoaded);
 
-  // useEffect(() => {
-  //   if (redirectTo) {
-  //     // dispatch(push(redirectTo));
-  //     dispatch(clearRedirect());
-  //   }
-  // }, [redirectTo]);
 
-  // useEffect(() => {
-  //   const token = window.localStorage.getItem('jwt');
-  //   dispatch(appLoad(token));
-  // }, []);
+  useEffect(() => {
+    const token = window.localStorage.getItem('jwt');
+    dispatch(appLoad(token));
+  }, []);
 
-  // if (appLoaded) {
-  if (true) {
+  if (appLoaded) {
     return (
       <>
         <Header />

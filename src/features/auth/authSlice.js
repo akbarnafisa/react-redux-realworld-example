@@ -54,7 +54,7 @@ export const register = createAsyncThunk(
   },
   {
     /**
-     * async thunk will only be dispatched and executed if the isLoading state in the Redux store is false.
+     * async thunk will only be dispatched and executed if the selectIsLoading state in the Redux store is false.
      * This can help prevent multiple concurrent requests for the same data,which could lead to unnecessary network traffic and potential data inconsistencies.
      */
     condition: (_, { getState }) => !selectIsLoading(getState()),
@@ -89,6 +89,22 @@ export const login = createAsyncThunk(
     condition: (_, { getState }) => !selectIsLoading(getState()),
   }
 );
+
+/**
+ * Send a get current user request
+ */
+
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async () => {
+    const user = await agent.Auth.current()
+    return { token, user}
+  },
+  {
+    condition: (_, { getState}) => Boolean(selectAuthSlice(getState()).token)
+  }
+)
+
 
 /**
  * @type {AuthState}

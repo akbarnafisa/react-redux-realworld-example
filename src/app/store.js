@@ -20,7 +20,7 @@ export function makeStore(preloadedState) {
       common: commonReducer,
       article: articleReducer,
       profile: profileReducer,
-        auth: authReducer,
+      auth: authReducer,
       //   comments: commentsReducer,
     },
     devTools: true,
