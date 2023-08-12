@@ -7,6 +7,7 @@ import xss from 'xss';
 import TagsList from '../../features/tags/TagsList';
 import { articlePageUnloaded, getArticle } from '../../reducers/article';
 import ArticleMeta from './ArticleMeta';
+import CommentSection from '../../features/comments/CommentSection';
 
 
 /**
@@ -66,10 +67,9 @@ function Article({ match }) {
         </div>
 
         <hr />
-        {/* TODO: handle comment after auth */}
-        {/* <Suspense fallback={<p>Loading comments</p>}>
+        <Suspense fallback={<p>Loading comments</p>}>
           <CommentSection />
-        </Suspense> */}
+        </Suspense>
       </div>
     </div>
   );
