@@ -16,11 +16,11 @@ const Article = lazy(() =>
     /* webpackChunkName: "Article", webpackPrefetch: true  */ '../components/Article'
   )
 );
-// const Editor = lazy(() =>
-//   import(
-//     /* webpackChunkName: "Editor", webpackPrefetch: true  */ '../components/Editor'
-//   )
-// );
+const Editor = lazy(() =>
+  import(
+    /* webpackChunkName: "Editor", webpackPrefetch: true  */ '../components/Editor'
+  )
+);
 const AuthScreen = lazy(() =>
   import(
     /* webpackChunkName: "AuthScreen", webpackPrefetch: true  */ '../features/auth/AuthScreen'
@@ -63,10 +63,11 @@ function App() {
             <Route path="/register" element={<AuthScreen isRegisterScreen />} />
             <Route path="/login" element={<AuthScreen />} />
             <Route path="/settings" element={<SettingsScreen />} />
+            <Route path="/editor" element={<Editor />} />
             {/* 
             
             <Route path="/editor/:slug" element={<Editor />} />
-            <Route path="/editor" element={<Editor />} />
+          />
             
             
              */}

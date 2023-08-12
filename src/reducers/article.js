@@ -6,6 +6,35 @@ export const getArticle = createAsyncThunk(
   agent.Articles.get
 );
 
+function serializeError(error) {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+    };
+  }
+
+  if (typeof error === 'object' && error !== null) {
+    return error;
+  }
+
+  return { message: String(error) };
+}
+
+export const createArticle = createAsyncThunk(
+  'article/createArticle',
+  agent.Articles.create,
+  { serializeError }
+);
+
+export const updateArticle = createAsyncThunk(
+  'article/updateArticle',
+  agent.Articles.update,
+  { serializeError }
+);
+
 
 const initialState = {
   article: undefined,
@@ -24,6 +53,24 @@ const articleSlice = createSlice({
       state.article = action.payload.article
       state.inProgress = false
     })
+
+    builder.addCase(createArticle.fulfilled, (state) => {
+      state.inProgress = false;
+    });
+
+    builder.addCase(createArticle.rejected, (state, action) => {
+      state.errors = action.error.errors;
+      state.inProgress = false;
+    });
+
+    builder.addCase(updateArticle.fulfilled, (state) => {
+      state.inProgress = false;
+    });
+
+    builder.addCase(updateArticle.rejected, (state, action) => {
+      state.errors = action.error.errors;
+      state.inProgress = false;
+    });
 
     builder.addMatcher(
       (action) => action.type.endsWith('/pending'),
