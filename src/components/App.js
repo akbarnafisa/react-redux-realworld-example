@@ -31,11 +31,11 @@ const Profile = lazy(() =>
     /* webpackChunkName: "Profile", webpackPrefetch: true  */ '../components/Profile'
   )
 );
-// const SettingsScreen = lazy(() =>
-//   import(
-//     /* webpackChunkName: "SettingsScreen", webpackPrefetch: true  */ '../features/auth/SettingsScreen'
-//   )
-// );
+const SettingsScreen = lazy(() =>
+  import(
+    /* webpackChunkName: "SettingsScreen", webpackPrefetch: true  */ '../features/auth/SettingsScreen'
+  )
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -62,11 +62,12 @@ function App() {
             />
             <Route path="/register" element={<AuthScreen isRegisterScreen />} />
             <Route path="/login" element={<AuthScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
             {/* 
             
             <Route path="/editor/:slug" element={<Editor />} />
             <Route path="/editor" element={<Editor />} />
-            <Route path="/settings" element={<SettingsScreen />} />
+            
             
              */}
           </Routes>

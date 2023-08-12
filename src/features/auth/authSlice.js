@@ -109,6 +109,41 @@ export const getUser = createAsyncThunk(
 
 
 /**
+ * Send a update user request
+ *
+ * @param {object} argument
+ * @param {string} argument.email
+ * @param {string} argument.username
+ * @param {string} argument.bio
+ * @param {string} argument.image
+ * @param {string} argument.password
+ */
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async ({ email, username, bio, image, password }, thunkApi) => {
+    try {
+
+      const {
+        user: { token, ...user}
+      } = await agent.Auth.save({ email, username, bio, image, password })
+
+      return { token, user}
+    } catch (error) {
+      if (isApiError(error)) {
+        return thunkApi.rejectWithValue(error);
+      }
+
+      throw error;
+    }
+  },
+  {
+    condition: (_, { getState }) =>
+      selectIsAuthenticated(getState()) && !selectIsLoading(getState()),
+  }
+)
+
+
+/**
  * @type {AuthState}
  */
 const initialState = {
@@ -149,10 +184,12 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, successReducer)
       .addCase(register.fulfilled, successReducer)
       .addCase(getUser.fulfilled, successReducer)
+      .addCase(updateUser.fulfilled, successReducer)
 
     builder
       .addCase(login.rejected, failureReducer)
       .addCase(register.rejected, failureReducer)
+      .addCase(updateUser.rejected, failureReducer)
 
     builder.addMatcher(
       (action) => /auth\/.*\/pending/.test(action.type),
@@ -179,13 +216,10 @@ export const selectIsAuthenticated = createSelector(
   (state) => selectAuthSlice(state).token,
   selectUser,
   (token, user) => {
-    console.log({
-      token,
-      user
-    })
     return Boolean(token && user)
   }
 );
+
 
 
 export const { setToken, logout } = authSlice.actions;
