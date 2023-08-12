@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { selectUser } from '../../features/auth/authSlice';
+import { selectUser } from '../../features/auth/authSlice';
 
 import ArticleActions from './ArticleActions';
 
@@ -12,10 +12,9 @@ import ArticleActions from './ArticleActions';
  * <ArticleMeta />
  */
 function ArticleMeta() {
-  // TODO: handle auth for current user
-  // const currentUser = useSelector(selectUser);
+  const currentUser = useSelector(selectUser);
   const article = useSelector((state) => state.article.article);
-  // const isAuthor = currentUser?.username === article?.author.username;
+  const isAuthor = currentUser?.username === article?.author.username;
 
   if (!article) return null;
 
@@ -41,7 +40,7 @@ function ArticleMeta() {
         </time>
       </div>
 
-      {/* {isAuthor ? <ArticleActions /> : null} */}
+      {isAuthor ? <ArticleActions /> : null}
     </div>
   );
 }
