@@ -5,10 +5,27 @@ import {
   getArticlesByAuthor,
   getFavoriteArticles,
 } from '../reducers/articleList';
-import { getProfile, profilePageUnloaded } from '../reducers/profile';
-import { useParams  } from 'react-router';
-import { Link } from 'react-router-dom';
+import { follow, getProfile, profilePageUnloaded, unfollow } from '../reducers/profile';
+import { useParams } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
+import { selectUser } from '../features/auth/authSlice';
 
+/**
+ * Go to profile settings
+ *
+ * @example
+ * <EditProfileSettings />
+ */
+function EditProfileSettings() {
+  return (
+    <Link
+      to="/settings"
+      className="btn btn-sm btn-outline-secondary action-btn"
+    >
+      <i className="ion-gear-a" /> Edit Profile Settings
+    </Link>
+  );
+}
 
 /**
  * Follow or unfollow an user
@@ -21,6 +38,9 @@ import { Link } from 'react-router-dom';
  */
 function FollowUserButton({ username, following }) {
   let classes = 'btn btn-sm action-btn';
+  const dispatch = useDispatch();
+  const currentUser = useSelector(selectUser);
+  const navigate = useNavigate();
   let textMessage;
 
   if (following) {
@@ -32,18 +52,16 @@ function FollowUserButton({ username, following }) {
   }
 
   const handleClick = () => {
-    navigate.push(`/register?redirectTo=${location.pathname}`);
-    // TODO: handle after auth
-    // if (!currentUser) {
-    //   navigate.push(`/register?redirectTo=${location.pathname}`);
-    //   return;
-    // }
+    if (!currentUser) {
+      navigate.push(`/register?redirectTo=${location.pathname}`);
+      return;
+    }
 
-    // if (following) {
-    //   dispatch(unfollow(username));
-    // } else {
-    //   dispatch(follow(username));
-    // }
+    if (following) {
+      dispatch(unfollow(username));
+    } else {
+      dispatch(follow(username));
+    }
   };
 
   return (
@@ -54,7 +72,6 @@ function FollowUserButton({ username, following }) {
     </button>
   );
 }
-
 
 /**
  * Show the profile of an user
@@ -72,9 +89,8 @@ function FollowUserButton({ username, following }) {
  * />
  */
 function UserInfo({ profile }) {
-  // TODO: handle after auth
-  // const currentUser = useSelector(selectUser);
-  // const isCurrentUser = profile.username === currentUser?.username;
+  const currentUser = useSelector(selectUser);
+  const isCurrentUser = profile.username === currentUser?.username;
   return (
     <div className="user-info">
       <div className="container">
@@ -91,19 +107,14 @@ function UserInfo({ profile }) {
             <h4>{profile.username}</h4>
             <p>{profile.bio}</p>
 
-            <FollowUserButton
-              username={profile.username}
-              following={profile.following}
-            />
-
-            {/* {isCurrentUser ? (
+            {isCurrentUser ? (
               <EditProfileSettings />
             ) : (
               <FollowUserButton
                 username={profile.username}
                 following={profile.following}
               />
-            )} */}
+            )}
           </div>
         </div>
       </div>
@@ -153,12 +164,12 @@ function ProfileTabs({ username, isFavorites }) {
  * <Profile />
  */
 function Profile({ isFavoritePage, match }) {
-  const dispatch = useDispatch()
-  const profile = useSelector((state) => state.profile)
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.profile);
   const { username } = useParams();
 
   useEffect(() => {
-    const fetchProfile = dispatch(getProfile(username))
+    const fetchProfile = dispatch(getProfile(username));
     const fetchArticles = dispatch(
       isFavoritePage
         ? getFavoriteArticles({ username })
@@ -169,7 +180,7 @@ function Profile({ isFavoritePage, match }) {
       fetchProfile.abort();
       fetchArticles.abort();
     };
-  }, [username, isFavoritePage])
+  }, [username, isFavoritePage]);
 
   useEffect(() => () => dispatch(profilePageUnloaded()), []);
 
