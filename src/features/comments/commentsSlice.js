@@ -60,7 +60,6 @@ export const getCommentsForArticle = createAsyncThunk(
   'comments/getCommentsForArticle',
   async (articleSlug) => {
     const { comments } = await agent.Comments.forArticle(articleSlug);
-    console.log(333, comments)
 
     return comments;
   },
@@ -133,7 +132,6 @@ const commentsSlice = createSlice({
 
     builder.addCase(getCommentsForArticle.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
-      console.log(123)
       commentAdapter.setAll(state, action.payload);
     });
 
@@ -144,7 +142,6 @@ const commentsSlice = createSlice({
 
     builder.addMatcher(
       (action) => {
-        console.log(action.type)
         return /comments\/.*\/pending/.test(action.type)
       },
       loadingReducer
